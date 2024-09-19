@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar App</title>
+</head>
+
+<body>
+    <div id="tabs">
+        <button onclick="showTab('calendar')">Календарь</button>
+        <button onclick="showTab('addEvent')">Добавить событие</button>
+        <button onclick="showTab('viewEvent')">Просмотр события</button>
+        <button onclick="showTab('settings')">Настройки</button>
+        <button onclick="showTab('integration')">Интеграция</button>
+    </div>
+
+    <div id="calendarTab" style="display: none;">
+        <h2>Главная страница календаря</h2>
+        <div id="calendar"></div>
+    </div>
+
+    <div id="addEventTab" style="display: none;">
+        <h2>Добавление события</h2>
+        <form>
+            <!-- Форма для ввода данных о событии -->
+            Название: <input type="text" id="eventTitle" required><br>
+            Дата: <input type="date" id="eventDate" required><br>
+            Время: <input type="time" id="eventTime" required><br>
+            Описание: <textarea id="eventDescription"></textarea><br>
+            Местоположение: <input type="text" id="eventLocation"><br>
+            <button type="button" onclick="saveEvent()">Сохранить</button>
+        </form>
+    </div>
+
+    <div id="viewEventTab" style="display: none;">
+        <h2>Просмотр события</h2>
+        <!-- Экран с подробной информацией о событии -->
+        <div id="eventDetails"></div>
+    </div>
+
+    <div id="settingsTab" style="display: none;">
+        <h2>Настройки</h2>
+        <!-- Форма с настройками -->
+        Формат даты: 
+        <select id="dateFormat">
+            <option value="dd.mm.yyyy">ДД.ММ.ГГГГ</option>
+            <option value="mm/dd/yyyy">ММ/ДД/ГГГГ</option>
+            <!-- Другие варианты форматов даты -->
+        </select><br>
+        
+        Формат времени: 
+        <select id="timeFormat">
+            <option value="24h">24 часа</option>
+            <option value="12h">12 часов</option>
+            <!-- Другие варианты форматов времени -->
+        </select><br>
+        
+        <!-- Другие параметры настроек, если необходимо -->
+        
+        <button type="button" onclick="saveSettings()">Сохранить</button>
+    </div>
+
+    <div id="integrationTab" style="display: none;">
+        <h2>Интеграция с другими календарями</h2>
+        <!-- Функционал интеграции с другими календарями -->
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            var tabs = document.querySelectorAll('[id$="Tab"]');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].style.display = 'none';
+            }
+            document.getElementById(tabName + 'Tab').style.display = 'block';
+        }
+
+        function saveEvent() {
+            var title = document.getElementById("eventTitle").value;
+            var date = document.getElementById("eventDate").value;
+            var time = document.getElementById("eventTime").value;
+            var description = document.getElementById("eventDescription").value;
+            var location = document.getElementById("eventLocation").value;
+
+            var eventDetails = document.getElementById("eventDetails");
+            eventDetails.innerHTML = "<strong>Название:</strong> " + title + "<br>" +
+                "<strong>Дата:</strong> " + date + "<br>" +
+                "<strong>Время:</strong> " + time + "<br>" +
+                "<strong>Описание:</strong> " + description + "<br>" +
+                "<strong>Местоположение:</strong> " + location;
+
+            showTab('viewEvent');
+        }
+
+        function generateCalendar() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth();
+
+            var firstDay = new Date(year, month, 1);
+            var lastDay = new Date(year, month + 1, 0);
+
+            var calendarHTML = '<table border="1" cellpadding="10">';
+            calendarHTML += '<tr><th>Вс</th><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th></tr>';
+
+            var dayCount = 1;
+            var dayOfWeek = firstDay.getDay();
+
+            calendarHTML += '<tr>';
+            for (var i = 0; i < 7; i++) {
+                if (i < dayOfWeek) {
+                    calendarHTML += '<td></td>';
+                } else {
+                    calendarHTML += '<td>' + dayCount + '</td>';
+                    dayCount++;
+                }
+            }
+            calendarHTML += '</tr>';
+
+            while (dayCount <= lastDay.getDate()) {
+                calendarHTML += '<tr>';
+                for (var i = 0; i < 7; i++) {
+                    if (dayCount > lastDay.getDate()) {
+                        calendarHTML += '<td></td>';
+                    } else {
+                        calendarHTML += '<td>' + dayCount + '</td>';
+                        dayCount++;
+                    }
+                }
+                calendarHTML += '</tr>';
+            }
+
+            calendarHTML += '</table>';
+
+            document.getElementById('calendar').innerHTML = calendarHTML;
+        }
+
+        function saveSettings() {
+            var dateFormat = document.getElementById("dateFormat").value;
+            var timeFormat = document.getElementById("timeFormat").value;
+
+            // Сохранение настроек (вы можете добавить свой код сохранения настроек)
+
+            alert("Настройки сохранены!");
+        }
+
+        showTab('calendar');
+        generateCalendar();
+    </script>
+</body>
+
+</html>
